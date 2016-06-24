@@ -7,6 +7,7 @@
 #SBATCH --time=$${walltime}
 #SBATCH --partition=$${queue}
 #SBATCH --account=$${account}
+#SBATCH --qos=$${qos}
 #SBATCH --job-name=$${job_name}
 #SBATCH --output=$${job_name}-%j.out
 #SBATCH --error=$${job_name}-%j.error
