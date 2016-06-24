@@ -43,8 +43,7 @@ def start_ping_launch(launchpad, launch_id):
     if fd.MULTIPROCESSING:
         if not launch_id:
             raise ValueError("Multiprocessing cannot be run in offline mode!")
-        m = fd.DATASERVER
-        m.Running_IDs()[os.getpid()] = launch_id
+        fd.Running_IDs[os.getpid()] = launch_id
         return None
     else:
         ping_stop = threading.Event()
@@ -56,8 +55,7 @@ def start_ping_launch(launchpad, launch_id):
 def stop_backgrounds(ping_stop, btask_stops):
     fd = FWData()
     if fd.MULTIPROCESSING:
-        m = fd.DATASERVER
-        m.Running_IDs()[os.getpid()] = None
+        fd.Running_IDs[os.getpid()] = None
     else:
         ping_stop.set()
 
@@ -361,7 +359,7 @@ class Rocket():
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
         if my_spec.get("_pass_job_info"):
-            job_info = my_spec.get("_job_info", [])
+            job_info = list(my_spec.get("_job_info", []))
             job_info.append({"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir})
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
 
